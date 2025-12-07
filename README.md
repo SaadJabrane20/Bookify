@@ -47,3 +47,25 @@ booking_saas/
 
 └── README.md
 
+---
+
+## 🧩 Tech Stack
+
+| Component | Technology |
+|----------|------------|
+| Backend | Django 5 |
+| API | Django REST Framework |
+| Auth | SimpleJWT |
+| Database | SQLite (dev), supports MySQL/PostgreSQL |
+| Environment | pipenv |
+
+---
+
+## 🏗 Setup Instructions
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/SaadJabrane20/bookify.git
+cd bookify
+
+
