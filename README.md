@@ -43,9 +43,7 @@ booking_saas/
 
 ├── bookings/ # Booking logic
 
-│
-
-├── config/ # Django settings
+├── BookingSaaS/ # Django settings
 
 └── README.md
 
