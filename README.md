@@ -34,10 +34,18 @@ This MVP allows service providers (barbers, dentists, tutors, etc.) to list serv
 
 booking_saas/
 │
+
 ├── users/ # Profiles & user roles
+
 ├── services/ # Service + ServiceCategory
+
 ├── providers/ # Working hours
+
 ├── bookings/ # Booking logic
+
 │
+
 ├── config/ # Django settings
+
 └── README.md
+
