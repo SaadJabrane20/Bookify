@@ -12,6 +12,7 @@ from core.permissions import (
     IsCustomerOrProvider,
 )
 
+
 class BookingViewSet(viewsets.ModelViewSet):
     serializer_class = BookingSerializer
     permission_classes = [IsAuthenticated]
@@ -27,18 +28,6 @@ class BookingViewSet(viewsets.ModelViewSet):
 
         return Booking.objects.none()
 
-    def get_permissions(self):
-        if self.action == "create":
-            return [IsAuthenticated, IsClient]
-
-        if self.action == "cancel":
-            return [IsAuthenticated, IsBookingCustomer]
-
-        if self.action in ["confirm", "reject"]:
-            return [IsAuthenticated, IsBookingProvider]
-
-        return [IsAuthenticated, IsCustomerOrProvider]
-
     def perform_create(self, serializer):
         serializer.save(
             customer=self.request.user,
@@ -50,9 +39,16 @@ class BookingViewSet(viewsets.ModelViewSet):
             {"detail": "Bookings cannot be deleted. Use cancel instead."},
             status=status.HTTP_403_FORBIDDEN
         )
-    
-    #Custom Actions
-    @action(detail=True, methods=["patch"])
+
+    # ======================
+    # Custom Actions
+    # ======================
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[IsAuthenticated, IsCustomerOrProvider],
+    )
     def cancel(self, request, pk=None):
         booking = self.get_object()
 
@@ -66,11 +62,15 @@ class BookingViewSet(viewsets.ModelViewSet):
         booking.save()
 
         return Response(
-            {"detail": "Booking cancelled successfully."},
+            BookingSerializer(booking).data,
             status=status.HTTP_200_OK
         )
 
-    @action(detail=True, methods=["patch"])
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[IsAuthenticated, IsBookingProvider],
+    )
     def confirm(self, request, pk=None):
         booking = self.get_object()
 
@@ -84,54 +84,28 @@ class BookingViewSet(viewsets.ModelViewSet):
         booking.save()
 
         return Response(
-            {"detail": "Booking confirmed."},
+            BookingSerializer(booking).data,
             status=status.HTTP_200_OK
         )
 
-    @action(detail=True, methods=["patch"])
-    def reject(self, request, pk=None):
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[IsAuthenticated, IsBookingProvider],
+    )
+    def complete(self, request, pk=None):
         booking = self.get_object()
 
-        if booking.status != "pending":
+        if booking.status != "confirmed":
             return Response(
-                {"detail": "Only pending bookings can be rejected."},
+                {"detail": "Only confirmed bookings can be completed."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        booking.status = "cancelled"
+        booking.status = "completed"
         booking.save()
 
         return Response(
-            {"detail": "Booking rejected."},
+            BookingSerializer(booking).data,
             status=status.HTTP_200_OK
         )
-    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated, IsBookingProvider])
-    def confirm(self, request, pk=None):
-        booking = self.get_object()
-
-        if booking.status != "pending":
-            return Response(
-                {"detail": "Only pending bookings can be confirmed."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        booking.status = "confirmed"
-        booking.save()
-
-        serializer = self.get_serializer(booking)
-        return Response(serializer.data)
-    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated, IsCustomerOrProvider])
-    def cancel(self, request, pk=None):
-        booking = self.get_object()
-
-        if booking.status == "cancelled":
-            return Response(
-                {"detail": "Booking is already cancelled."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        booking.status = "cancelled"
-        booking.save()
-
-        serializer = self.get_serializer(booking)
-        return Response(serializer.data)

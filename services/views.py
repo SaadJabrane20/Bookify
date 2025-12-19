@@ -13,11 +13,13 @@ class ServiceCategoryViewSet(viewsets.ModelViewSet):
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [IsAuthenticated, IsProvider]
-        return []
-    
     def perform_create(self, serializer):
         serializer.save(provider=self.request.user)
+
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [IsProvider()]
+        return super().get_permissions()
+    
