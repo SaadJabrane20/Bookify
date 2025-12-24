@@ -1,23 +1,18 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Profile
+from djoser.serializers import UserCreateSerializer
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class CustomUserCreateSerializer(UserCreateSerializer):
     role = serializers.ChoiceField(
-        choices=Profile.User_roles,
-        write_only=True
+        choices=Profile.ROLE_CHOICES, write_only=True
     )
-
-    class Meta:
-        model = User
-        fields = ("id", "username", "password", "role")
-        extra_kwargs = {
-            "password": {"write_only": True}
-        }
+    class Meta(UserCreateSerializer.Meta):
+        fields = ("id", "username", "password", "email", "role")
 
     def create(self, validated_data):
         role = validated_data.pop("role")
-        user = User.objects.create_user(**validated_data)
+        user = super().create(validated_data)
         user.profile.role = role
         user.profile.save()
         return user

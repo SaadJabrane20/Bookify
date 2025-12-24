@@ -3,13 +3,13 @@ from django.contrib.auth.models import User
 from services.models import ServiceCategory
 # Create your models here.
 class Profile(models.Model):
-    User_roles = (
+    ROLE_CHOICES = (
         ('provider', 'Provider'),
         ('client', 'Client'),
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=User_roles)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     phone_number = models.CharField(max_length=20)
     category = models.ForeignKey(ServiceCategory, null=True, blank=True, on_delete=models.SET_NULL)
     def __str__(self):

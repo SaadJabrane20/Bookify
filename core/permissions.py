@@ -3,8 +3,11 @@ from bookings.models import Booking
 
 class IsProvider(permissions.BasePermission):
     def has_permission(self, request, view):
-        # Only allow access if user is a provider
-        return request.user.profile.role == 'provider'
+        return (
+            request.user.is_authenticated
+            and hasattr(request.user, "profile")
+            and request.user.profile.role == "provider"
+        )
 
 
 class IsClient(permissions.BasePermission):

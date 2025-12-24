@@ -20,9 +20,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["provider"]
 
-    def create(self, validated_data):
-        validated_data["provider"] = self.context["request"].user
-        return super().create(validated_data)
+    def perform_create(self, serializer):
+        serializer.save(provider=self.request.user)
 
     def validate_duration(self, value):
         if value <= 0:
@@ -33,10 +32,4 @@ class ServiceSerializer(serializers.ModelSerializer):
         if value <= 0:
             raise serializers.ValidationError("Price must be positive.")
         return value
-
-    def validate(self, data):
-        user = self.context["request"].user
-        if not hasattr(user, "profile") or user.profile.role != "provider":
-            raise serializers.ValidationError("Only providers can create services.")
-        return data
     

@@ -150,8 +150,8 @@ DJOSER = {
     'LOGOUT_ON_PASSWORD_CHANGE': True,
 
     'SERIALIZERS': {
-        'user_create': 'users.serializers.UserCreateSerializer',
-        'user': 'users.serializers.UserSerializer',
-        'current_user': 'users.serializers.UserSerializer',
+        'user_create': "users.serializers.CustomUserCreateSerializer",
+        'user': "users.serializers.UserSerializer",
+        'current_user': "users.serializers.UserSerializer",
     },
 }
