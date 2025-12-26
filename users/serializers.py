@@ -5,16 +5,26 @@ from djoser.serializers import UserCreateSerializer
 
 class CustomUserCreateSerializer(UserCreateSerializer):
     role = serializers.ChoiceField(
-        choices=Profile.ROLE_CHOICES, write_only=True
+        choices=Profile.ROLE_CHOICES,
+        write_only=True
     )
+
     class Meta(UserCreateSerializer.Meta):
-        fields = ("id", "username", "password", "email", "role")
+        fields = UserCreateSerializer.Meta.fields + ("role",)
+
+    def validate(self, attrs):
+        # Extract role BEFORE Djoser creates the User
+        self.role = attrs.pop("role", None)
+        return super().validate(attrs)
 
     def create(self, validated_data):
-        role = validated_data.pop("role")
         user = super().create(validated_data)
-        user.profile.role = role
-        user.profile.save()
+
+        # Assign role after user + profile exist
+        if self.role:
+            user.profile.role = self.role
+            user.profile.save()
+
         return user
 
 

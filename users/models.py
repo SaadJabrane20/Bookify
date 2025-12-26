@@ -9,8 +9,18 @@ class Profile(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
-    phone_number = models.CharField(max_length=20)
-    category = models.ForeignKey(ServiceCategory, null=True, blank=True, on_delete=models.SET_NULL)
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default='client'
+    )
+    phone_number = models.CharField(max_length=20, blank=True)
+    category = models.ForeignKey(
+        ServiceCategory,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
     def __str__(self):
         return f"{self.user.username} Profile"

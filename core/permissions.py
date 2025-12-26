@@ -1,11 +1,14 @@
 from rest_framework import permissions
 from bookings.models import Booking
+from rest_framework.permissions import BasePermission
 
-class IsProvider(permissions.BasePermission):
+class IsProvider(BasePermission):
     def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+
         return (
-            request.user.is_authenticated
-            and hasattr(request.user, "profile")
+            hasattr(request.user, "profile")
             and request.user.profile.role == "provider"
         )
 

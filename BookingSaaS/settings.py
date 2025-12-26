@@ -143,15 +143,9 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
-    'LOGIN_FIELD': 'username',
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'SET_USERNAME_RETYPE': False,
-    'SET_PASSWORD_RETYPE': True,
-    'LOGOUT_ON_PASSWORD_CHANGE': True,
-
-    'SERIALIZERS': {
-        'user_create': "users.serializers.CustomUserCreateSerializer",
-        'user': "users.serializers.UserSerializer",
-        'current_user': "users.serializers.UserSerializer",
+    "SERIALIZERS": {
+        "user_create": "users.serializers.CustomUserCreateSerializer",
+        "user": "users.serializers.UserSerializer",
+        "current_user": "users.serializers.UserSerializer",
     },
 }

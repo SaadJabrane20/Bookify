@@ -9,12 +9,11 @@ from core.permissions import IsProvider
 class ServiceCategoryViewSet(viewsets.ModelViewSet):
     queryset = ServiceCategory.objects.all()
     serializer_class = ServiceCategorySerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_permissions(self):
         if self.action in ["create", "update", "partial_update", "destroy"]:
             return [IsProvider()]
-        return super().get_permissions()
+        return [IsAuthenticatedOrReadOnly()]
 
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
