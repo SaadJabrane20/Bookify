@@ -27,7 +27,20 @@ class BookingViewSet(viewsets.ModelViewSet):
             return Booking.objects.filter(provider=user)
 
         return Booking.objects.none()
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsAuthenticated(), IsClient()]
 
+        if self.action in ["confirm", "complete"]:
+            return [IsAuthenticated(), IsBookingProvider()]
+
+        if self.action == "cancel":
+            return [IsAuthenticated(), IsCustomerOrProvider()]
+
+        return [IsAuthenticated()]
+    # ======================
+    # Custom Actions
+    # ======================
     def perform_create(self, serializer):
         serializer.save(
             customer=self.request.user,
@@ -40,9 +53,6 @@ class BookingViewSet(viewsets.ModelViewSet):
             status=status.HTTP_403_FORBIDDEN
         )
 
-    # ======================
-    # Custom Actions
-    # ======================
 
     @action(
         detail=True,

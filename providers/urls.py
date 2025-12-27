@@ -3,5 +3,5 @@ from rest_framework.routers import DefaultRouter
 from .views import WorkingHoursViewSet
 
 router = DefaultRouter()
-router.register(r'providers', WorkingHoursViewSet)
+router.register(r'providers', WorkingHoursViewSet, basename="providers")
 urlpatterns = router.urls

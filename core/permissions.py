@@ -42,3 +42,7 @@ class IsCustomerOrProvider(permissions.BasePermission):
             obj.customer == request.user
             or obj.provider == request.user
         )
+    
+class IsWorkingHoursOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.provider == request.user

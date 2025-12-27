@@ -7,6 +7,7 @@ class WorkingHours(models.Model):
     day_of_week = models.IntegerField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-
+    class Meta:
+        unique_together = ("provider", "day_of_week")
     def __str__(self):
         return f"{self.provider.username}"
