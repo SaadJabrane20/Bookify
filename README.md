@@ -1,32 +1,81 @@
-# 📘 Booking SaaS Backend
+# 📅 Bookify – Booking SaaS API
 
-A fully functional backend for a **booking and appointment management SaaS**, built using **Django**, **Django REST Framework**, and **JWT Authentication**.
+Bookify is a **role-based booking SaaS backend** built with **Django Rest Framework**.  
+It allows **clients** to book services offered by **providers**, with availability management, booking lifecycle control, and secure JWT authentication.
 
-This MVP allows service providers (barbers, dentists, tutors, etc.) to list services, define working hours, and receive bookings. Clients can browse services and book appointments.
+This project was developed as an **ALX Software Engineering Capstone Project**.
 
 ---
 
 ## 🚀 Features
 
-### 👤 User Management
-- JWT authentication (login, refresh)
-- User roles: **Provider** or **Client**
-- Automatic profile creation
-- Provider categories
+### 🔐 Authentication & Authorization
+- JWT authentication using **Simple JWT**
+- User management via **Djoser**
+- Role-based access control:
+  - `client`
+  - `provider`
 
-### 🛠 Services
-- Providers create services (name, price, duration)
-- Categorized using ServiceCategory
-- Clients can view services
+---
 
-### 🕒 Working Hours
+### 👤 Users & Profiles
+- Automatic profile creation using Django signals
+- Each user has a role (`client` or `provider`)
+- Profile linked to services and bookings
+
+---
+
+### 🛠 Services (Provider Side)
+- Providers can:
+  - Create service categories
+  - Create services
+- Clients can:
+  - View service categories and services
+- Permission-protected endpoints
+
+---
+
+### 📅 Working Hours
 - Providers define weekly availability
-- Used to validate bookings
+- Used to validate booking times
+- Prevents bookings outside working hours
 
-### 📅 Bookings
-- Clients can book services
-- Includes provider, service, date/time, status
-- Status flow: pending → confirmed → cancelled
+---
+
+### 📦 Bookings
+- Clients can create bookings
+- Providers can confirm and complete bookings
+- Clients or providers can cancel bookings
+
+---
+
+
+- Prevents:
+  - Overlapping bookings
+  - Booking in the past
+  - Booking outside working hours
+
+---
+
+### 🧑‍💼 Admin Dashboard
+- Customized Django admin
+- Easy management of:
+  - Users & profiles
+  - Services & categories
+  - Working hours
+  - Bookings
+
+---
+
+## 🧰 Tech Stack
+
+- Python 3
+- Django
+- Django Rest Framework
+- Simple JWT
+- Djoser
+- SQLite (development)
+- Insomnia (API testing)
 
 ---
 
@@ -49,23 +98,85 @@ booking_saas/
 
 ---
 
-## 🧩 Tech Stack
+## 🔑 Authentication Flow
 
-| Component | Technology |
-|----------|------------|
-| Backend | Django 5 |
-| API | Django REST Framework |
-| Auth | SimpleJWT |
-| Database | SQLite (dev), supports MySQL/PostgreSQL |
-| Environment | pipenv |
+### Register User
+```bash
+POST /api/auth/users/
+```
+
+### Obtain JWT Token
+```bash
+POST /api/auth/jwt/create/
+```
+
+### USE Token in requests
+```bash
+Authorization: Bearer <access_token>
+```
 
 ---
 
-## 🏗 Setup Instructions
+### 📌 Main API Endpoints
 
-### 1️⃣ Clone the repository
+- Users
 ```bash
-git clone https://github.com/SaadJabrane20/bookify.git
-cd bookify
+POST /api/auth/users/
+POST /api/auth/jwt/create/
+GET  /api/users/profile/
+```
 
+- Services
+```bash
+GET  /api/services/service-categories/
+POST /api/services/service-categories/   # provider only
+POST /api/services/services/             # provider only
+```
 
+- Working Hours
+```bash
+POST /api/providers/working-hours/       # provider only
+```
+
+- Bookings
+```bash
+POST /api/bookings/                      # client only
+POST /api/bookings/{id}/confirm/         # provider only
+POST /api/bookings/{id}/complete/        # provider only
+POST /api/bookings/{id}/cancel/          # client/provider
+```
+
+---
+
+### ⚙️ Installation & Setup
+```bash
+git clone https://github.com/SaadJabrane20/Bookify.git
+cd Bookify
+pipenv install
+pipenv shell
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+---
+
+### 🧪 Testing
+- API tested using Insomnia/Postman
+- Manual testing for:
+    Authentication
+    Role permissions
+    Booking flow
+    Working hours validation
+
+---
+
+### 👨‍🎓 Author
+Saad jabrane
+ALX Software Engineering Student
+Backend Developer
+
+---
+
+### 📜 License
+This project is developed for educational purposes under the ALX Software Engineering Program.
