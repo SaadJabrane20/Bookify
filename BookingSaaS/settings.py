@@ -149,3 +149,7 @@ DJOSER = {
         "current_user": "users.serializers.UserSerializer",
     },
 }
+
+ADMIN_SITE_HEADER = "Bookify Admin"
+ADMIN_SITE_TITLE = "Bookify Dashboard"
+ADMIN_INDEX_TITLE = "Platform Management"
