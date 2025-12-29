@@ -189,6 +189,6 @@ SECURE_HSTS_PRELOAD = True
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = "810f8b5474ff32a8a5190f407e36dff8"
 if not SECRET_KEY:
     raise RuntimeError("DJANGO_SECRET_KEY is not set")
