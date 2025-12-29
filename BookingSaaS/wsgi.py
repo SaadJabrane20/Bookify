@@ -13,7 +13,7 @@ path = '/home/saadjbr/Bookify'
 if path not in sys.path:
     sys.path.append(path)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'bookify.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'BookingSaaS.settings'
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
